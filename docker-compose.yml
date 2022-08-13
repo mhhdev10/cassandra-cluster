@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  node1:
+    image: cassandra
+    container_name: cassandra-node1
+    hostname: cassandra-node1
+    ports:
+      - 9042:9042
+    expose:
+      - 7000
+      - 7199
+    volumes:
+      - ./node01/data:/var/lib/cassandra
+      - ./node01/logs:/opt/cassandra/logs
+    #      - ./node01/config:/etc/cassandra
+    networks:
+      - cassandra
+    environment:
+      CASSANDRA_SEEDS: "cassandra-node2,cassandra-node3"
+#      CASSANDRA_CLUSTER_NAME: CassCluster
+      CASSANDRA_DC: DC1
+      CASSANDRA_RACK: rack1
+
+  node2:
+    image: cassandra
+    container_name: cassandra-node2
+    hostname: cassandra-node2
+    ports:
+      - 9043:9042
+    expose:
+      - 7000
+      - 7199
+    volumes:
+      - ./node02/data:/var/lib/cassandra
+      - ./node02/logs:/opt/cassandra/logs
+    #      - ./node02/config:/etc/cassandra
+    networks:
+      - cassandra
+    environment:
+      CASSANDRA_SEEDS: "cassandra-node1,cassandra-node3"
+#      CASSANDRA_CLUSTER_NAME: CassCluster
+      CASSANDRA_DC: DC1
+      CASSANDRA_RACK: rack1
+
+  node3:
+    image: cassandra
+    container_name: cassandra-node3
+    hostname: cassandra-node3
+    ports:
+      - 9044:9042
+    expose:
+      - 7000
+      - 7199
+    volumes:
+      - ./node03/data:/var/lib/cassandra
+      - ./node03/logs:/opt/cassandra/logs
+    #      - ./node03/config:/etc/cassandra
+    networks:
+      - cassandra
+    environment:
+      CASSANDRA_SEEDS: "cassandra-node1,cassandra-node2"
+#      CASSANDRA_CLUSTER_NAME: CassCluster
+      CASSANDRA_DC: DC1
+      CASSANDRA_RACK: rack1
+
+
+networks:
+  cassandra:
+#    driver: default
